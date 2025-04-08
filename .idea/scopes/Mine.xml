@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Mine" pattern="(file[Routine_Tracker.app.main]:*||file[Routine_Tracker.app.main]:*/)&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-anydpi-v26/*&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-hdpi/*&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-mdpi/*&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-xhdpi/*&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-xxhdpi/*&amp;&amp;!file[Routine_Tracker.app.main]:res/mipmap-xxxhdpi/*&amp;&amp;!file[Routine_Tracker.app.main]:res/xml/*" />
+</component>

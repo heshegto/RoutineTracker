@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/PomadoroCard">
+
+        <TextView
+            android:id="@+id/WorkTime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/work" />
+
+        <Button
+            android:id="@+id/editWorkTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/PomadoroCard">
+
+        <TextView
+            android:id="@+id/ChillTime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/rest" />
+
+        <Button
+            android:id="@+id/editChillTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/PomadoroCard">
+        <Button
+            android:id="@+id/PomadoroStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_pomadoro" />
+
+        <ImageButton
+            android:id="@+id/changeTimeType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pomadoroReshufle"
+            android:src="@android:drawable/ic_popup_sync"
+            android:tint="#000000" />
+    </LinearLayout>
+</LinearLayout>

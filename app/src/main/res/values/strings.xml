@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Routine Tracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="time_set">Set time</string>
+    <string name="cancel">Cancel</string>
+    <string name="time">Time : </string>
+    <string name="work">Work :</string>
+    <string name="rest">"Rest : "</string>
+    <string name="start_pomadoro">Start Work/Rest</string>
+    <string name="pomadoroReshufle">Change active countdown timer</string>
+</resources>
