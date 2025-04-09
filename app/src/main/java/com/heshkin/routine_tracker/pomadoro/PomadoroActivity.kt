@@ -1,5 +1,6 @@
 package com.heshkin.routine_tracker.pomadoro
 
+import android.Manifest
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -10,8 +11,13 @@ import com.heshkin.routine_tracker.R
 import android.app.NotificationManager
 import android.app.*
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
+import android.provider.Settings
+import androidx.annotation.RequiresPermission
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
@@ -116,46 +122,54 @@ class PomadoroActivity : ComponentActivity() {
     }
 
     private fun startCountDown() {
-        val sharedPreferencesWork = getSharedPreferences(WORK_TIME, MODE_PRIVATE)
-        val sharedPreferencesRest = getSharedPreferences(REST_TIME, MODE_PRIVATE)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            val sharedPreferencesWork = getSharedPreferences(WORK_TIME, MODE_PRIVATE)
+            val sharedPreferencesRest = getSharedPreferences(REST_TIME, MODE_PRIVATE)
 
-        val sharedPreferences: SharedPreferences
-        val timeButton: Button
+            val sharedPreferences: SharedPreferences
+            val timeButton: Button
 
-        if (sharedPreferencesWork.getBoolean(FIELD_IS_ACTIVE, false)) {
-            sharedPreferences = sharedPreferencesWork
-            timeButton = findViewById(R.id.editWorkTime)
-        } else {
-            sharedPreferences = sharedPreferencesRest
-            timeButton = findViewById(R.id.editChillTime)
-        }
+            if (sharedPreferencesWork.getBoolean(FIELD_IS_ACTIVE, false)) {
+                sharedPreferences = sharedPreferencesWork
+                timeButton = findViewById(R.id.editWorkTime)
+            } else {
+                sharedPreferences = sharedPreferencesRest
+                timeButton = findViewById(R.id.editChillTime)
+            }
 
-        val timeToCount: Long = (((sharedPreferences.getInt(FIELD_HOURS, 0).toLong() * 60L +
-                sharedPreferences.getInt(FIELD_MINUTES, 0).toLong()) * 60L +
-                sharedPreferences.getInt(FIELD_SECONDS, 0).toLong()) * 1000L)
+            val timeToCount: Long = (((sharedPreferences.getInt(FIELD_HOURS, 0).toLong() * 60L +
+                    sharedPreferences.getInt(FIELD_MINUTES, 0).toLong()) * 60L +
+                    sharedPreferences.getInt(FIELD_SECONDS, 0).toLong()) * 1000L)
 
-        object : CountDownTimer(timeToCount, 1000) {
-            // 10 секунд, тикает каждую секунду
-            override fun onTick(millisUntilFinished: Long) {
-                val hours = millisUntilFinished / 3_600_000L
-                val minutes = millisUntilFinished / 60_000L
-                val seconds = millisUntilFinished / 1000L
-                timeButton.setText(
-                    "%02d:%02d:%02d".format(
-                        hours,
-                        minutes,
-                        seconds
+            object : CountDownTimer(timeToCount, 1000) {
+                // 10 секунд, тикает каждую секунду
+                override fun onTick(millisUntilFinished: Long) {
+                    val hours = millisUntilFinished / 3_600_000L
+                    val minutes = millisUntilFinished / 60_000L
+                    val seconds = millisUntilFinished / 1000L
+                    timeButton.setText(
+                        "%02d:%02d:%02d".format(
+                            hours,
+                            minutes,
+                            seconds
+                        )
                     )
-                )
-            }
+                }
 
-            override fun onFinish() {
-                showNotification()
-            }
-        }.start()
-
+                @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+                override fun onFinish() {
+                    showNotification()
+                }
+            }.start()
+        }
+        else { startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)) }
     }
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     private fun showNotification() {
         val notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
@@ -168,7 +182,6 @@ class PomadoroActivity : ComponentActivity() {
             .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(this)
-        if (notificationManager ){//TODO}
         notificationManager.notify(1, builder.build()) // Отправляем уведомление
     }
 
