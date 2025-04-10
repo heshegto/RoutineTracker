@@ -16,7 +16,6 @@
 
 package com.heshkin.routine_tracker.my_time_picker;
 
-import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -61,9 +59,7 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
     
     private final MyTimePicker mTimePicker;
     private final OnTimeSetListener mCallback;
-    private final Calendar mCalendar;
-    private final java.text.DateFormat mDateFormat;
-        
+
     int mInitialHourOfDay;
     int mInitialMinute;
     int mInitialSeconds;    
@@ -104,19 +100,18 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         mInitialSeconds = seconds;
         mIs24HourView = is24HourView;
 
-        mDateFormat = DateFormat.getTimeFormat(context);
-        mCalendar = Calendar.getInstance();
         updateTitle(mInitialHourOfDay, mInitialMinute, mInitialSeconds);
-        
-        setButton(context.getText(R.string.time_set), this);
-        setButton2(context.getText(R.string.cancel), (OnClickListener) null);
-        //setIcon(android.R.drawable.ic_dialog_time);
-        
+
+        setButton(BUTTON_POSITIVE, context.getText(R.string.time_set), this);
+        setButton(BUTTON_NEGATIVE, context.getText(R.string.cancel), (OnClickListener) null);
+
         LayoutInflater inflater = 
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.time_picker_dialog, null);
         setView(view);
-        mTimePicker = (MyTimePicker) view.findViewById(R.id.timePicker);
+        mTimePicker = view.findViewById(R.id.timePicker);
 
         // initialize state
         mTimePicker.setCurrentHour(mInitialHourOfDay);
@@ -137,12 +132,6 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
     public void onTimeChanged(MyTimePicker view, int hourOfDay, int minute, int seconds) {
         updateTitle(hourOfDay, minute, seconds);
     }
-    
-    public void updateTime(int hourOfDay, int minuteOfHour, int seconds) {
-        mTimePicker.setCurrentHour(hourOfDay);
-        mTimePicker.setCurrentMinute(minuteOfHour);
-        mTimePicker.setCurrentSecond(seconds);
-    }
 
     @SuppressLint("DefaultLocale")
     private void updateTitle(int hour, int minute, int seconds) {
@@ -152,6 +141,7 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         setTitle(sHour + ":" + sMin + ":" + sSec);
     }
 
+    @NonNull
     @Override
     public Bundle onSaveInstanceState() {
         Bundle state = super.onSaveInstanceState();
@@ -163,7 +153,7 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
     }
     
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         int hour = savedInstanceState.getInt(HOUR);
         int minute = savedInstanceState.getInt(MINUTE);
@@ -175,6 +165,4 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         mTimePicker.setOnTimeChangedListener(this);
         updateTitle(hour, minute, seconds);
     }
-    
-   
 }

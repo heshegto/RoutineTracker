@@ -8,4 +8,6 @@
     <string name="rest">"Rest : "</string>
     <string name="start_pomadoro">Start Work/Rest</string>
     <string name="pomadoroReshufle">Change active countdown timer</string>
+    <string name="time_template" translatable="false">00:00:00</string>
+    <string name="am" translatable="false">AM</string>
 </resources>

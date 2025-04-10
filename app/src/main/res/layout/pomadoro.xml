@@ -8,32 +8,30 @@
 
         <TextView
             android:id="@+id/WorkTime"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:text="@string/work" />
 
         <Button
             android:id="@+id/editWorkTime"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:text="@string/time_template"/>
     </LinearLayout>
 
     <LinearLayout style="@style/PomadoroCard">
 
         <TextView
-            android:id="@+id/ChillTime"
-            android:layout_width="0dp"
+            android:id="@+id/RestTime"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:text="@string/rest" />
 
         <Button
-            android:id="@+id/editChillTime"
-            android:layout_width="0dp"
+            android:id="@+id/editRestTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:text="@string/time_template"/>
     </LinearLayout>
 
     <LinearLayout style="@style/PomadoroCard">
