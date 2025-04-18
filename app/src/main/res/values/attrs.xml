@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TimeButton">
+        <attr name="name" format="string" required="true"/>
+        <attr name="default_hours" format="integer" default="0"/>
+        <attr name="default_minute" format="integer" default="0"/>
+        <attr name="default_seconds" format="integer" default="0"/>
+    </declare-styleable>
+</resources>

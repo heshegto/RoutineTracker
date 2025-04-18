@@ -4,5 +4,37 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="TimeName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TimeButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/time_template</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/grey</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PomadoroStartPauseResume" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PomadoroShufleStop">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:tint">#000000</item>
     </style>
 </resources>

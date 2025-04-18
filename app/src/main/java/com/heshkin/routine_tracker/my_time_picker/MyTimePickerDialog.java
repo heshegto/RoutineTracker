@@ -32,9 +32,7 @@ import androidx.annotation.NonNull;
 import com.heshkin.routine_tracker.R;
 import com.heshkin.routine_tracker.my_time_picker.MyTimePicker.OnTimeChangedListener;
 
-/**
- * A dialog that prompts the user for the time of day using a {@link MyTimePicker}.
- */
+/** A dialog that prompts the user for the time of day using a {@link MyTimePicker}. */
 public class MyTimePickerDialog extends AlertDialog implements OnClickListener, 
         OnTimeChangedListener {
 

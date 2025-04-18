@@ -1,0 +1,167 @@
+package com.heshkin.routine_tracker.pomadoro
+
+import android.annotation.SuppressLint
+import android.app.Activity.MODE_PRIVATE
+import android.content.Context
+import android.icu.util.Calendar
+import android.util.AttributeSet
+import android.widget.Button
+
+import androidx.core.content.edit
+
+import com.heshkin.routine_tracker.R
+import com.heshkin.routine_tracker.my_time_picker.MyTimePickerDialog
+
+/** Extends [Button] class.
+ *
+ * Developed specifically to contain two times: current and initial.
+ * Current time stored inside class, shown as [Button]'s Text and can be changed throw [setTime].
+ * Initial time stored in SharedPreferences and can be changed by CLICK on [Button] by [showTimePicker].
+ * Initial time can be restored to current time by [restoreTime].
+ *
+ * Have same XML attributes as [Button] class, plus its own:
+ * * [R.styleable.TimeButton_name] - is a string that is used to get access
+ * to [TimeButton]'s SharedPreferences. Stored in property [timeName].
+ * This attribute (and parameter [timeName] as well) should be unique for every [TimeButton]
+ * to be SharedPreferences unique too.
+ * * [R.styleable.TimeButton_default_hours], [R.styleable.TimeButton_default_minute],
+ * [R.styleable.TimeButton_default_seconds] - attributes that contain default values for initial time
+ *
+ * @property [timeName] contains [TimeButton]'s name that used to get access to SharedPreferences.
+ * Should be unique to be SharedPreferences unique.
+ *
+ * @property [mHours] contains hours for current time.
+ * @property [mMinutes] contains minutes for current time.
+ * @property [mSeconds] contains seconds for current time.
+ *
+ * @property [mIsActive] contains state of [TimeButton].
+ *
+ * @constructor Same as in [Button].
+ */
+
+class TimeButton @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : Button(context, attrs, defStyleAttr, defStyleRes) {
+
+    val timeName: String
+
+    var mHours: Int
+    var mMinutes: Int
+    var mSeconds: Int
+
+    var mIsActive: Boolean = false
+
+    init {
+        val typedArray = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.TimeButton,
+            defStyleAttr,
+            defStyleRes
+        )
+        /* this String is used to get access to Button's SharedPreferences */
+        timeName = typedArray.getString(R.styleable.TimeButton_name) ?: "default"
+
+        mHours = typedArray.getInt(R.styleable.TimeButton_default_hours, 0)
+        mMinutes = typedArray.getInt(R.styleable.TimeButton_default_minute, 0)
+        mSeconds = typedArray.getInt(R.styleable.TimeButton_default_seconds, 0)
+
+        typedArray.recycle()
+
+        setInitialTime(mHours, mMinutes, mSeconds)
+
+        setOnClickListener { showTimePicker() }
+        deactivate()
+    }
+
+    fun activate() {
+        mIsActive = true
+        this.setBackgroundColor(context.getColor(R.color.green))
+    }
+
+    fun deactivate() {
+        mIsActive = false
+        this.setBackgroundColor(context.getColor(R.color.red))
+    }
+
+    fun setTime(hours: Int, minutes: Int, seconds: Int) {
+        @SuppressLint("SetTextI18n")
+        text = "%02d:%02d:%02d".format(hours, minutes, seconds)
+        mHours = hours
+        mMinutes = minutes
+        mSeconds = seconds
+    }
+
+    private fun showTimePicker() {
+        MyTimePickerDialog(
+            context,
+            { _, hours, minutes, seconds ->
+                setSharedPreferences(hours, minutes, seconds)
+                setTime(hours, minutes, seconds)
+            },
+            mHours,
+            mMinutes,
+            mSeconds,
+            true
+        ).show()
+    }
+
+    fun restoreTime() {
+        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        val FIELD_HOURS = Calendar.HOUR.toString()
+        val FIELD_MINUTES = Calendar.MINUTE.toString()
+        val FIELD_SECONDS = Calendar.SECOND.toString()
+        setTime(
+            SP.getInt(FIELD_HOURS, 0),
+            SP.getInt(FIELD_MINUTES, 0),
+            SP.getInt(FIELD_SECONDS, 0)
+        )
+    }
+
+    private fun setSharedPreferences(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
+        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        val FIELD_HOURS = Calendar.HOUR.toString()
+        val FIELD_MINUTES = Calendar.MINUTE.toString()
+        val FIELD_SECONDS = Calendar.SECOND.toString()
+        SP.edit {
+            putInt(FIELD_HOURS, hours)
+            putInt(FIELD_MINUTES, minutes)
+            putInt(FIELD_SECONDS, seconds)
+        }
+    }
+
+    private fun setInitialTime(
+        defaultHours: Int = 0,
+        defaultMinutes: Int = 0,
+        defaultSeconds: Int = 0,
+    ) {
+        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        val FIELD_HOURS = Calendar.HOUR.toString()
+        val FIELD_MINUTES = Calendar.MINUTE.toString()
+        val FIELD_SECONDS = Calendar.SECOND.toString()
+        /* if something wrong with SharedPreferences, set default values to SharedPreferences
+         * if everything is ok, values from SharedPreferences goes to TimeButton */
+        if (
+            SP.all.isEmpty()
+            or !SP.contains(FIELD_HOURS)
+            or !SP.contains(FIELD_MINUTES)
+            or !SP.contains(FIELD_SECONDS)
+        ) {
+            SP.edit {
+                putInt(FIELD_HOURS, defaultHours)
+                putInt(FIELD_MINUTES, defaultMinutes)
+                putInt(FIELD_SECONDS, defaultSeconds)
+            }
+        } else {
+            setTime(
+                SP.getInt(FIELD_HOURS, 0),
+                SP.getInt(FIELD_MINUTES, 0),
+                SP.getInt(FIELD_SECONDS, 0)
+            )
+        }
+    }
+
+
+}

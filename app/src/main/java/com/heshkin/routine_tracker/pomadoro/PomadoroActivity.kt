@@ -1,38 +1,26 @@
 package com.heshkin.routine_tracker.pomadoro
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
-import androidx.activity.ComponentActivity
-import com.heshkin.routine_tracker.my_time_picker.MyTimePickerDialog
-import com.heshkin.routine_tracker.R
 import android.app.NotificationManager
 import android.app.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
+
+import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.edit
+
+import com.heshkin.routine_tracker.R
+
 
 class PomadoroActivity : ComponentActivity() {
-    //bases to remember in Shared Preferences
-    private val WORK_TIME = "work time"
-    private val REST_TIME = "rest time"
-
-    //fields of every base
-    private val FIELD_HOURS = "hours"
-    private val FIELD_MINUTES = "minutes"
-    private val FIELD_SECONDS = "seconds"
-    private val FIELD_IS_ACTIVE = "isActive"
-
-    //notification chanel
     private val NOTIFICATION_CHANNEL_ID = "Pomadoro_channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,97 +29,15 @@ class PomadoroActivity : ComponentActivity() {
 
         createNotificationChannel()
 
-        setUpInitialSharedPreferences(WORK_TIME, defaultMinutes = 25, isActive = true)
-        val buttonEditWorkTime: Button = findViewById(R.id.editWorkTime)
-        setTime(buttonEditWorkTime, WORK_TIME)
-        buttonEditWorkTime.setOnClickListener { showTimePicker(buttonEditWorkTime, WORK_TIME) }
-
-        setUpInitialSharedPreferences(REST_TIME, defaultMinutes = 5, isActive = false)
-        val buttonEditRestTime: Button = findViewById(R.id.editRestTime)
-        setTime(buttonEditRestTime, REST_TIME)
-        buttonEditRestTime.setOnClickListener { showTimePicker(buttonEditRestTime, REST_TIME) }
+        val buttonEditWorkTime: TimeButton = findViewById(R.id.editWorkTime)
+        buttonEditWorkTime.activate()
+        val buttonEditRestTime: TimeButton = findViewById(R.id.editRestTime)
 
         val buttonStartPomadoro: Button = findViewById(R.id.PomadoroStart)
-        buttonStartPomadoro.setOnClickListener { startCountDown() }
+        buttonStartPomadoro.setOnClickListener { startCountDown(buttonEditWorkTime, buttonEditRestTime) }
     }
 
-    private fun setUpInitialSharedPreferences(
-        sharedPreferencesName: String,
-        defaultHours: Int = 0,
-        defaultMinutes: Int = 0,
-        defaultSeconds: Int = 0,
-        isActive: Boolean = false
-    ) {
-        val SP = getSharedPreferences(sharedPreferencesName, MODE_PRIVATE)
-        if (SP.all.isEmpty()
-        ) {
-            SP.edit {
-                putInt(FIELD_HOURS, defaultHours)
-                putInt(FIELD_MINUTES, defaultMinutes)
-                putInt(FIELD_SECONDS, defaultSeconds)
-                putBoolean(FIELD_IS_ACTIVE, isActive)
-            }
-        } else {
-            // this part solving problems with missing data that can appear
-            if (!SP.contains(FIELD_HOURS)) {
-                SP.edit { putInt(FIELD_HOURS, defaultHours) }
-            }
-            if (!SP.contains(FIELD_MINUTES)) {
-                SP.edit { putInt(FIELD_MINUTES, defaultMinutes) }
-            }
-            if (!SP.contains(FIELD_SECONDS)) {
-                SP.edit { putInt(FIELD_SECONDS, defaultSeconds) }
-            }
-            if (!SP.contains(FIELD_IS_ACTIVE)) {
-                SP.edit { putBoolean(FIELD_IS_ACTIVE, isActive) }
-            }
-        }
-    }
-
-    private fun setTime(timeReceiver: Button, timeName: String) {
-        val SP = getSharedPreferences(timeName, MODE_PRIVATE)
-
-        @SuppressLint("SetTextI18n")
-        timeReceiver.text = "%02d:%02d:%02d".format(
-            SP.getInt(FIELD_HOURS, 0),
-            SP.getInt(FIELD_MINUTES, 0),
-            SP.getInt(FIELD_SECONDS, 0),
-        )
-        if (SP.getBoolean(FIELD_IS_ACTIVE, false)) {
-            timeReceiver.setBackgroundColor(getColor(R.color.green))
-        } else {
-            timeReceiver.setBackgroundColor(getColor(R.color.red))
-        }
-    }
-
-    private fun showTimePicker(timeReceiver: Button, timeName: String) {
-        val SP = getSharedPreferences(timeName, MODE_PRIVATE)
-
-        MyTimePickerDialog(
-            this,
-            { _, hours, minutes, seconds ->
-
-                SP.edit {
-                    putInt(FIELD_HOURS, hours)
-                    putInt(FIELD_MINUTES, minutes)
-                    putInt(FIELD_SECONDS, seconds)
-                }
-
-                @SuppressLint("SetTextI18n")
-                timeReceiver.text = "%02d:%02d:%02d".format(
-                    hours,
-                    minutes,
-                    seconds
-                )
-            },
-            SP.getInt(FIELD_HOURS, 0),
-            SP.getInt(FIELD_MINUTES, 0),
-            SP.getInt(FIELD_SECONDS, 0),
-            true
-        ).show()
-    }
-
-    private fun startCountDown() {
+    private fun startCountDown(vararg timeButtonList: TimeButton)  {
         if (
             (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
             or
@@ -140,46 +46,39 @@ class PomadoroActivity : ComponentActivity() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED)
         ) {
-            val sharedPreferencesWork = getSharedPreferences(WORK_TIME, MODE_PRIVATE)
-            val sharedPreferencesRest = getSharedPreferences(REST_TIME, MODE_PRIVATE)
-
-            val sharedPreferences: SharedPreferences
-            val timeButton: Button
-
-            if (sharedPreferencesWork.getBoolean(FIELD_IS_ACTIVE, false)) {
-                sharedPreferences = sharedPreferencesWork
-                timeButton = findViewById(R.id.editWorkTime)
-            } else {
-                sharedPreferences = sharedPreferencesRest
-                timeButton = findViewById(R.id.editRestTime)
+            var timeButton: TimeButton? = null
+            for (_timeButton in timeButtonList) {
+                if (_timeButton.mIsActive) {
+                    timeButton = _timeButton
+                }
+            }
+            if (timeButton == null) {
+                throw NoActiveTimeButtonException("No active time button")
             }
 
-            val timeToCount: Long = (((sharedPreferences.getInt(FIELD_HOURS, 0).toLong() * 60L +
-                    sharedPreferences.getInt(FIELD_MINUTES, 0).toLong()) * 60L +
-                    sharedPreferences.getInt(FIELD_SECONDS, 0).toLong()) * 1000L)
+            val timeToCount: Long = ((timeButton.mHours.toLong() * 60L +
+                    timeButton.mMinutes.toLong()) * 60L +
+                    timeButton.mSeconds.toLong()) * 1000L
 
             object : CountDownTimer(timeToCount, 1000) {
-                // 10 секунд, тикает каждую секунду
                 override fun onTick(millisUntilFinished: Long) {
                     val hours = millisUntilFinished / 3_600_000L
                     val minutes = millisUntilFinished / 60_000L
                     val seconds = millisUntilFinished / 1000L
 
-                    @SuppressLint("SetTextI18n")
-                    timeButton.text = "%02d:%02d:%02d".format(
-                        hours,
-                        minutes,
-                        seconds
-                    )
+                    timeButton.setTime(hours.toInt(), minutes.toInt(), seconds.toInt())
                 }
-
                 @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
                 override fun onFinish() {
                     showNotification()
                 }
             }.start()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS),0)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                0
+            )
         }
     }
 
@@ -188,18 +87,17 @@ class PomadoroActivity : ComponentActivity() {
         val notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Иконка уведомления
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Тайме завершён")
             .setContentText("Время истекло!")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setSound(notificationSound) // Добавляем звук
+            .setSound(notificationSound)
             .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.notify(1, builder.build()) // Отправляем уведомление
+        notificationManager.notify(1, builder.build())
     }
 
-    // Создаём канал уведомлений (для Android 13+)
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val channel = NotificationChannel(
@@ -212,4 +110,6 @@ class PomadoroActivity : ComponentActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    class NoActiveTimeButtonException(message: String) : Exception(message)
 }

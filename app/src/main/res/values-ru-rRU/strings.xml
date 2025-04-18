@@ -9,4 +9,7 @@
     <string name="rest">"Отдых : "</string>
     <string name="start_pomadoro">Начать Работу/Отдых</string>
     <string name="pomadoroReshufle">Смена активного таймера</string>
+    <string name="pause_pomadoro">Пауза</string>
+    <string name="stop_pomadoro">Остановить помадоро</string>
+    <string name="resume_pomadoro">Продолжить</string>
 </resources>

@@ -17,9 +17,6 @@
 
 package com.heshkin.routine_tracker.my_time_picker;
 
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Parcel;
@@ -32,6 +29,9 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
 import com.heshkin.routine_tracker.R;
+
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
 
 /**
  * A view for selecting the time of day, in either 24 hour or AM/PM mode.
@@ -52,19 +52,13 @@ import com.heshkin.routine_tracker.R;
  */
 public class MyTimePicker extends FrameLayout {
 
-    /**
-     * A no-op callback used in the constructor to avoid null checks
-     * later in the code.
-     */
-    private static final OnTimeChangedListener NO_OP_CHANGE_LISTENER = (view, hourOfDay, minute, seconds) -> {
-    };
+    /** A no-op callback used in the constructor to avoid null checks later in the code. */
+    private static final OnTimeChangedListener NO_OP_CHANGE_LISTENER =
+            (view, hourOfDay, minute, seconds) -> {};
 
     @SuppressLint("DefaultLocale")
     public static final NumberPicker.Formatter TWO_DIGIT_FORMATTER =
-            value -> {
-                // TODO Auto-generated method stub
-                return String.format("%02d", value);
-            };
+            value -> String.format("%02d", value);
 
     // state
     private int mCurrentHour = 0; // 0-23
@@ -84,11 +78,8 @@ public class MyTimePicker extends FrameLayout {
     // callbacks
     private OnTimeChangedListener mOnTimeChangedListener;
 
-    /**
-     * The callback interface used to indicate the time has been adjusted.
-     */
+    /** The callback interface used to indicate the time has been adjusted.*/
     public interface OnTimeChangedListener {
-
         /**
          * @param view      The view associated with this listener.
          * @param hourOfDay The current hour.
@@ -98,13 +89,9 @@ public class MyTimePicker extends FrameLayout {
         void onTimeChanged(MyTimePicker view, int hourOfDay, int minute, int seconds);
     }
 
-    public MyTimePicker(Context context) {
-        this(context, null);
-    }
+    public MyTimePicker(Context context) { this(context, null); }
 
-    public MyTimePicker(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+    public MyTimePicker(Context context, AttributeSet attrs) { this(context, attrs, 0); }
 
     public MyTimePicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -118,7 +105,6 @@ public class MyTimePicker extends FrameLayout {
         // hour
         mHourPicker = findViewById(R.id.hour);
         mHourPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            // TODO Auto-generated method stub
             mCurrentHour = newVal;
             if (!mIs24HourView) {
                 // adjust from [1-12] to [0-11] internally, with the times
@@ -212,9 +198,7 @@ public class MyTimePicker extends FrameLayout {
         mAmPmButton.setEnabled(enabled);
     }
 
-    /**
-     * Used to save / restore state of time picker
-     */
+    /** Used to save / restore state of time picker */
     private static class SavedState extends BaseSavedState {
 
         private final int mHour;
@@ -282,16 +266,10 @@ public class MyTimePicker extends FrameLayout {
         mOnTimeChangedListener = onTimeChangedListener;
     }
 
-    /**
-     * @return The current hour (0-23).
-     */
-    public Integer getCurrentHour() {
-        return mCurrentHour;
-    }
+    /** @return The current hour (0-23). */
+    public Integer getCurrentHour() { return mCurrentHour; }
 
-    /**
-     * Set the current hour.
-     */
+    /** Set the current hour. */
     public void setCurrentHour(Integer currentHour) {
         this.mCurrentHour = currentHour;
         updateHourDisplay();
@@ -310,51 +288,31 @@ public class MyTimePicker extends FrameLayout {
         }
     }
 
-    /**
-     * @return true if this is in 24 hour view else false.
-     */
-    public boolean is24HourView() {
-        return mIs24HourView;
-    }
+    /** @return true if this is in 24 hour view else false. */
+    public boolean is24HourView() { return mIs24HourView; }
 
-    /**
-     * @return The current minute.
-     */
-    public Integer getCurrentMinute() {
-        return mCurrentMinute;
-    }
+    /** @return The current minute. */
+    public Integer getCurrentMinute() { return mCurrentMinute; }
 
-    /**
-     * Set the current minute (0-59).
-     */
+    /** Set the current minute (0-59). */
     public void setCurrentMinute(Integer currentMinute) {
         this.mCurrentMinute = currentMinute;
         updateMinuteDisplay();
     }
 
-    /**
-     * @return The current minute.
-     */
-    public Integer getCurrentSeconds() {
-        return mCurrentSeconds;
-    }
+    /** @return The current minute. */
+    public Integer getCurrentSeconds() { return mCurrentSeconds; }
 
-    /**
-     * Set the current second (0-59).
-     */
+    /** Set the current second (0-59). */
     public void setCurrentSecond(Integer currentSecond) {
         this.mCurrentSeconds = currentSecond;
         updateSecondsDisplay();
     }
 
     @Override
-    public int getBaseline() {
-        return mHourPicker.getBaseline();
-    }
+    public int getBaseline() { return mHourPicker.getBaseline(); }
 
-    /**
-     * Set the state of the spinners appropriate to the current hour.
-     */
+    /** Set the state of the spinners appropriate to the current hour. */
     private void updateHourDisplay() {
         int currentHour = mCurrentHour;
         if (!mIs24HourView) {
@@ -383,23 +341,33 @@ public class MyTimePicker extends FrameLayout {
     }
 
     private void onTimeChanged() {
-        mOnTimeChangedListener.onTimeChanged(this, getCurrentHour(), getCurrentMinute(), getCurrentSeconds());
+        mOnTimeChangedListener.onTimeChanged(
+                this,
+                getCurrentHour(),
+                getCurrentMinute(),
+                getCurrentSeconds()
+        );
     }
 
-    /**
-     * Set the state of the spinners appropriate to the current minute.
-     */
+    /** Set the state of the spinners appropriate to the current minute. */
     private void updateMinuteDisplay() {
         mMinutePicker.setValue(mCurrentMinute);
-        mOnTimeChangedListener.onTimeChanged(this, getCurrentHour(), getCurrentMinute(), getCurrentSeconds());
+        mOnTimeChangedListener.onTimeChanged(
+                this,
+                getCurrentHour(),
+                getCurrentMinute(),
+                getCurrentSeconds()
+        );
     }
 
-    /**
-     * Set the state of the spinners appropriate to the current second.
-     */
+    /** Set the state of the spinners appropriate to the current second. */
     private void updateSecondsDisplay() {
         mSecondPicker.setValue(mCurrentSeconds);
-        mOnTimeChangedListener.onTimeChanged(this, getCurrentHour(), getCurrentMinute(), getCurrentSeconds());
+        mOnTimeChangedListener.onTimeChanged(
+                this,
+                getCurrentHour(),
+                getCurrentMinute(),
+                getCurrentSeconds()
+        );
     }
 }
-

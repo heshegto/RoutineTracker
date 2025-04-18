@@ -1,52 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:backgroundTint="@color/green">
 
     <LinearLayout style="@style/PomadoroCard">
 
         <TextView
             android:id="@+id/WorkTime"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/TimeName"
             android:text="@string/work" />
 
-        <Button
+        <com.heshkin.routine_tracker.pomadoro.TimeButton
             android:id="@+id/editWorkTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/time_template"/>
+            style="@style/TimeButton"
+            custom:default_minute="25"
+            custom:name="workTime" />
+
     </LinearLayout>
 
     <LinearLayout style="@style/PomadoroCard">
 
         <TextView
             android:id="@+id/RestTime"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/TimeName"
             android:text="@string/rest" />
 
-        <Button
+        <com.heshkin.routine_tracker.pomadoro.TimeButton
             android:id="@+id/editRestTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/time_template"/>
+            style="@style/TimeButton"
+            custom:default_minute="5"
+            custom:name="restTime" />
+
     </LinearLayout>
 
     <LinearLayout style="@style/PomadoroCard">
+
         <Button
+
             android:id="@+id/PomadoroStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/PomadoroStartPauseResume"
+            android:visibility="visible"
             android:text="@string/start_pomadoro" />
+
+        <Button
+            android:id="@+id/PomadoroPause"
+            style="@style/PomadoroStartPauseResume"
+            android:visibility="visible"
+            android:text="@string/pause_pomadoro" />
+
+        <Button
+            android:id="@+id/PomadoroResume"
+            style="@style/PomadoroStartPauseResume"
+            android:visibility="visible"
+            android:text="@string/resume_pomadoro" />
 
         <ImageButton
             android:id="@+id/changeTimeType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/PomadoroShufleStop"
+            android:visibility="visible"
             android:contentDescription="@string/pomadoroReshufle"
-            android:src="@android:drawable/ic_popup_sync"
-            android:tint="#000000" />
+            android:src="@android:drawable/ic_popup_sync" />
+
+        <ImageButton
+            android:id="@+id/PomadoroStop"
+            style="@style/PomadoroShufleStop"
+            android:visibility="visible"
+            android:contentDescription="@string/stop_pomadoro"
+            android:src="@android:drawable/ic_media_stop" />
+
     </LinearLayout>
 </LinearLayout>

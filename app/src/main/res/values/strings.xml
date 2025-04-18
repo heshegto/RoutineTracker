@@ -10,4 +10,7 @@
     <string name="pomadoroReshufle">Change active countdown timer</string>
     <string name="time_template" translatable="false">00:00:00</string>
     <string name="am" translatable="false">AM</string>
+    <string name="pause_pomadoro">Pause</string>
+    <string name="stop_pomadoro">Stop pomadoro</string>
+    <string name="resume_pomadoro">Resume</string>
 </resources>
