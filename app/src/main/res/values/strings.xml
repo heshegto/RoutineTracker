@@ -6,11 +6,13 @@
     <string name="time">Time : </string>
     <string name="work">Work :</string>
     <string name="rest">"Rest : "</string>
-    <string name="start_pomadoro">Start Work/Rest</string>
-    <string name="pomadoroReshufle">Change active countdown timer</string>
+    <string name="start_pomadoro">Start</string>
+    <string name="change_pomadoro">Change active countdown timer</string>
     <string name="time_template" translatable="false">00:00:00</string>
     <string name="am" translatable="false">AM</string>
     <string name="pause_pomadoro">Pause</string>
     <string name="stop_pomadoro">Stop pomadoro</string>
     <string name="resume_pomadoro">Resume</string>
+    <string name="notification_title">Pomadoro ends</string>
+    <string name="notification_text">Time is up!</string>
 </resources>

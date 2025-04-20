@@ -45,12 +45,19 @@ class TimeButton @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : Button(context, attrs, defStyleAttr, defStyleRes) {
+    /** Fields of SharedPreferences */
+    companion object {
+        private val FIELD_HOURS = Calendar.HOUR.toString()
+        private val FIELD_MINUTES = Calendar.MINUTE.toString()
+        private val FIELD_SECONDS = Calendar.SECOND.toString()
+    }
 
     val timeName: String
 
     var mHours: Int
     var mMinutes: Int
     var mSeconds: Int
+    var mMiliseconds: Int
 
     var mIsActive: Boolean = false
 
@@ -67,6 +74,7 @@ class TimeButton @JvmOverloads constructor(
         mHours = typedArray.getInt(R.styleable.TimeButton_default_hours, 0)
         mMinutes = typedArray.getInt(R.styleable.TimeButton_default_minute, 0)
         mSeconds = typedArray.getInt(R.styleable.TimeButton_default_seconds, 0)
+        mMiliseconds = 0
 
         typedArray.recycle()
 
@@ -86,12 +94,13 @@ class TimeButton @JvmOverloads constructor(
         this.setBackgroundColor(context.getColor(R.color.red))
     }
 
-    fun setTime(hours: Int, minutes: Int, seconds: Int) {
+    fun setTime(hours: Int, minutes: Int, seconds: Int, miliseconds: Int) {
         @SuppressLint("SetTextI18n")
         text = "%02d:%02d:%02d".format(hours, minutes, seconds)
         mHours = hours
         mMinutes = minutes
         mSeconds = seconds
+        mMiliseconds = miliseconds
     }
 
     private fun showTimePicker() {
@@ -99,7 +108,7 @@ class TimeButton @JvmOverloads constructor(
             context,
             { _, hours, minutes, seconds ->
                 setSharedPreferences(hours, minutes, seconds)
-                setTime(hours, minutes, seconds)
+                setTime(hours, minutes, seconds, 0)
             },
             mHours,
             mMinutes,
@@ -110,21 +119,16 @@ class TimeButton @JvmOverloads constructor(
 
     fun restoreTime() {
         val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        val FIELD_HOURS = Calendar.HOUR.toString()
-        val FIELD_MINUTES = Calendar.MINUTE.toString()
-        val FIELD_SECONDS = Calendar.SECOND.toString()
         setTime(
             SP.getInt(FIELD_HOURS, 0),
             SP.getInt(FIELD_MINUTES, 0),
-            SP.getInt(FIELD_SECONDS, 0)
+            SP.getInt(FIELD_SECONDS, 0),
+            0
         )
     }
 
     private fun setSharedPreferences(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
         val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        val FIELD_HOURS = Calendar.HOUR.toString()
-        val FIELD_MINUTES = Calendar.MINUTE.toString()
-        val FIELD_SECONDS = Calendar.SECOND.toString()
         SP.edit {
             putInt(FIELD_HOURS, hours)
             putInt(FIELD_MINUTES, minutes)
@@ -138,9 +142,6 @@ class TimeButton @JvmOverloads constructor(
         defaultSeconds: Int = 0,
     ) {
         val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        val FIELD_HOURS = Calendar.HOUR.toString()
-        val FIELD_MINUTES = Calendar.MINUTE.toString()
-        val FIELD_SECONDS = Calendar.SECOND.toString()
         /* if something wrong with SharedPreferences, set default values to SharedPreferences
          * if everything is ok, values from SharedPreferences goes to TimeButton */
         if (
@@ -158,7 +159,8 @@ class TimeButton @JvmOverloads constructor(
             setTime(
                 SP.getInt(FIELD_HOURS, 0),
                 SP.getInt(FIELD_MINUTES, 0),
-                SP.getInt(FIELD_SECONDS, 0)
+                SP.getInt(FIELD_SECONDS, 0),
+                0
             )
         }
     }

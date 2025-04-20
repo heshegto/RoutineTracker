@@ -7,9 +7,11 @@
     <string name="time">"Время : "</string>
     <string name="work">Работа :</string>
     <string name="rest">"Отдых : "</string>
-    <string name="start_pomadoro">Начать Работу/Отдых</string>
-    <string name="pomadoroReshufle">Смена активного таймера</string>
+    <string name="start_pomadoro">Старт</string>
+    <string name="change_pomadoro">Смена активного таймера</string>
     <string name="pause_pomadoro">Пауза</string>
     <string name="stop_pomadoro">Остановить помадоро</string>
     <string name="resume_pomadoro">Продолжить</string>
+    <string name="notification_title">Помадоро завершён</string>
+    <string name="notification_text">Время истекло!</string>
 </resources>

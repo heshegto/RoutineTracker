@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -49,28 +50,28 @@
         <Button
             android:id="@+id/PomadoroPause"
             style="@style/PomadoroStartPauseResume"
-            android:visibility="visible"
+            android:visibility="gone"
             android:text="@string/pause_pomadoro" />
 
         <Button
             android:id="@+id/PomadoroResume"
             style="@style/PomadoroStartPauseResume"
-            android:visibility="visible"
+            android:visibility="gone"
             android:text="@string/resume_pomadoro" />
 
         <ImageButton
-            android:id="@+id/changeTimeType"
-            style="@style/PomadoroShufleStop"
+            android:id="@+id/PomadoroChange"
+            style="@style/PomadoroChangeStop"
             android:visibility="visible"
-            android:contentDescription="@string/pomadoroReshufle"
+            android:contentDescription="@string/change_pomadoro"
             android:src="@android:drawable/ic_popup_sync" />
 
         <ImageButton
             android:id="@+id/PomadoroStop"
-            style="@style/PomadoroShufleStop"
-            android:visibility="visible"
+            style="@style/PomadoroChangeStop"
             android:contentDescription="@string/stop_pomadoro"
-            android:src="@android:drawable/ic_media_stop" />
+            android:src="?android:attr/listChoiceIndicatorMultiple"
+            android:visibility="gone" />
 
     </LinearLayout>
 </LinearLayout>

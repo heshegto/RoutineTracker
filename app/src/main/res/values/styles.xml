@@ -25,13 +25,13 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="PomadoroStartPauseResume" parent="Widget.MaterialComponents.Button">
+    <style name="PomadoroStartPauseResume">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="PomadoroShufleStop">
+    <style name="PomadoroChangeStop">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_gravity">center</item>
