@@ -5,5 +5,7 @@
         <attr name="default_hours" format="integer" default="0"/>
         <attr name="default_minute" format="integer" default="0"/>
         <attr name="default_seconds" format="integer" default="0"/>
+        <attr name="colorInactive" format="color" />
+        <attr name="colorActive" format="color" />
     </declare-styleable>
 </resources>

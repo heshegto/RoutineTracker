@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:backgroundTint="@color/green">
+    android:backgroundTint="@color/black">
 
     <LinearLayout style="@style/PomadoroCard">
 
@@ -19,7 +19,8 @@
             android:id="@+id/editWorkTime"
             style="@style/TimeButton"
             custom:default_minute="25"
-            custom:name="workTime" />
+            custom:name="workTime"
+            custom:colorActive="@color/green"/>
 
     </LinearLayout>
 
@@ -34,7 +35,8 @@
             android:id="@+id/editRestTime"
             style="@style/TimeButton"
             custom:default_minute="5"
-            custom:name="restTime" />
+            custom:name="restTime"
+            custom:colorActive="@color/purple_200"/>
 
     </LinearLayout>
 

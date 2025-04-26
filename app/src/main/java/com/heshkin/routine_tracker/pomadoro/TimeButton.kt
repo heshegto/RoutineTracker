@@ -47,17 +47,20 @@ class TimeButton @JvmOverloads constructor(
 ) : Button(context, attrs, defStyleAttr, defStyleRes) {
     /** Fields of SharedPreferences */
     companion object {
-        private val FIELD_HOURS = Calendar.HOUR.toString()
-        private val FIELD_MINUTES = Calendar.MINUTE.toString()
-        private val FIELD_SECONDS = Calendar.SECOND.toString()
+        private const val FIELD_HOURS = Calendar.HOUR.toString()
+        private const val FIELD_MINUTES = Calendar.MINUTE.toString()
+        private const val FIELD_SECONDS = Calendar.SECOND.toString()
     }
 
-    val timeName: String
+    private val timeName: String
 
     var mHours: Int
     var mMinutes: Int
     var mSeconds: Int
-    var mMiliseconds: Int
+    var mMilliseconds: Int
+
+    private var mColorActive: Int = 0
+    private var mColorInactive: Int = 0
 
     var mIsActive: Boolean = false
 
@@ -74,7 +77,10 @@ class TimeButton @JvmOverloads constructor(
         mHours = typedArray.getInt(R.styleable.TimeButton_default_hours, 0)
         mMinutes = typedArray.getInt(R.styleable.TimeButton_default_minute, 0)
         mSeconds = typedArray.getInt(R.styleable.TimeButton_default_seconds, 0)
-        mMiliseconds = 0
+        mMilliseconds = 0
+
+        mColorActive = typedArray.getColor(R.styleable.TimeButton_colorActive, 0)
+        mColorInactive = typedArray.getColor(R.styleable.TimeButton_colorInactive, 0)
 
         typedArray.recycle()
 
@@ -86,21 +92,21 @@ class TimeButton @JvmOverloads constructor(
 
     fun activate() {
         mIsActive = true
-        this.setBackgroundColor(context.getColor(R.color.green))
+        this.setBackgroundColor(mColorActive)
     }
 
     fun deactivate() {
         mIsActive = false
-        this.setBackgroundColor(context.getColor(R.color.red))
+        this.setBackgroundColor(mColorInactive)
     }
 
-    fun setTime(hours: Int, minutes: Int, seconds: Int, miliseconds: Int) {
+    fun setTime(hours: Int, minutes: Int, seconds: Int, milliseconds: Int) {
         @SuppressLint("SetTextI18n")
         text = "%02d:%02d:%02d".format(hours, minutes, seconds)
         mHours = hours
         mMinutes = minutes
         mSeconds = seconds
-        mMiliseconds = miliseconds
+        mMilliseconds = milliseconds
     }
 
     private fun showTimePicker() {
@@ -118,18 +124,18 @@ class TimeButton @JvmOverloads constructor(
     }
 
     fun restoreTime() {
-        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
         setTime(
-            SP.getInt(FIELD_HOURS, 0),
-            SP.getInt(FIELD_MINUTES, 0),
-            SP.getInt(FIELD_SECONDS, 0),
+            sp.getInt(FIELD_HOURS, 0),
+            sp.getInt(FIELD_MINUTES, 0),
+            sp.getInt(FIELD_SECONDS, 0),
             0
         )
     }
 
     private fun setSharedPreferences(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
-        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        SP.edit {
+        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        sp.edit {
             putInt(FIELD_HOURS, hours)
             putInt(FIELD_MINUTES, minutes)
             putInt(FIELD_SECONDS, seconds)
@@ -141,25 +147,25 @@ class TimeButton @JvmOverloads constructor(
         defaultMinutes: Int = 0,
         defaultSeconds: Int = 0,
     ) {
-        val SP = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
         /* if something wrong with SharedPreferences, set default values to SharedPreferences
          * if everything is ok, values from SharedPreferences goes to TimeButton */
         if (
-            SP.all.isEmpty()
-            or !SP.contains(FIELD_HOURS)
-            or !SP.contains(FIELD_MINUTES)
-            or !SP.contains(FIELD_SECONDS)
+            sp.all.isEmpty()
+            or !sp.contains(FIELD_HOURS)
+            or !sp.contains(FIELD_MINUTES)
+            or !sp.contains(FIELD_SECONDS)
         ) {
-            SP.edit {
+            sp.edit {
                 putInt(FIELD_HOURS, defaultHours)
                 putInt(FIELD_MINUTES, defaultMinutes)
                 putInt(FIELD_SECONDS, defaultSeconds)
             }
         } else {
             setTime(
-                SP.getInt(FIELD_HOURS, 0),
-                SP.getInt(FIELD_MINUTES, 0),
-                SP.getInt(FIELD_SECONDS, 0),
+                sp.getInt(FIELD_HOURS, 0),
+                sp.getInt(FIELD_MINUTES, 0),
+                sp.getInt(FIELD_SECONDS, 0),
                 0
             )
         }

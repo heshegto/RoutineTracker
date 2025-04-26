@@ -13,6 +13,10 @@
     <string name="pause_pomadoro">Pause</string>
     <string name="stop_pomadoro">Stop pomadoro</string>
     <string name="resume_pomadoro">Resume</string>
-    <string name="notification_title">Pomadoro ends</string>
-    <string name="notification_text">Time is up!</string>
+    <string name="pomadoro_notification_title">Pomadoro ends</string>
+    <string name="pomadoro_notification_text">Time is up!</string>
+    <string name="text_while_time_zero">Time must be more than zero</string>
+    <string name="ask_for_notification">Allow notifications in Settings</string>
+    <string name="pomadoro_notification_name">Pomadoro</string>
+    <string name="pomadoro_notification_description">Pomadoro notification settings</string>
 </resources>

@@ -12,6 +12,10 @@
     <string name="pause_pomadoro">Пауза</string>
     <string name="stop_pomadoro">Остановить помадоро</string>
     <string name="resume_pomadoro">Продолжить</string>
-    <string name="notification_title">Помадоро завершён</string>
-    <string name="notification_text">Время истекло!</string>
+    <string name="pomadoro_notification_title">Помадоро завершён</string>
+    <string name="pomadoro_notification_text">Время истекло!</string>
+    <string name="text_while_time_zero">Время должно быть больше нуля</string>
+    <string name="ask_for_notification">Разрешите показ уведомлений в Настройках</string>
+    <string name="pomadoro_notification_name">Помадоро</string>
+    <string name="pomadoro_notification_description">Настройки уведомлений Помадоро</string>
 </resources>
