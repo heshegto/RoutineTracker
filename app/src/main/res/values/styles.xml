@@ -21,7 +21,7 @@
         <item name="android:padding">@dimen/pomadoro_button_padding</item>
     </style>
 
-    <style name="TimeName">
+    <style name="TimeName" parent="@style/Base">
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
