@@ -1,79 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Pomadoro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    android:backgroundTint="@color/black">
+    android:orientation="vertical">
 
-    <LinearLayout style="@style/PomadoroCard">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/WorkTime"
-            style="@style/TimeName"
-            android:text="@string/work" />
+        <LinearLayout style="@style/PomadoroCard">
 
-        <com.heshkin.routine_tracker.pomadoro.TimeButton
-            android:id="@+id/editWorkTime"
-            style="@style/TimeButton"
-            custom:default_minute="25"
-            custom:name="workTime"
-            custom:colorActive="@color/green"/>
+            <TextView
+                style="@style/TimeName"
+                android:text="@string/work" />
+
+            <com.heshkin.routine_tracker.pomadoro.TimeButton
+                android:id="@+id/editWorkTime"
+                style="@style/TimeButton"
+                custom:colorActive="@color/green"
+                custom:default_minute="25"
+                custom:name="workTime" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/PomadoroCard">
+
+            <TextView
+                style="@style/TimeName"
+                android:text="@string/rest" />
+
+            <com.heshkin.routine_tracker.pomadoro.TimeButton
+                android:id="@+id/editRestTime"
+                style="@style/TimeButton"
+                custom:colorActive="@color/purple_200"
+                custom:default_minute="5"
+                custom:name="restTime" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/PomadoroCard">
+
+            <Button
+
+                android:id="@+id/PomadoroStart"
+                style="@style/PomadoroButton"
+                android:text="@string/start_pomadoro"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/PomadoroPause"
+                style="@style/PomadoroButton"
+                android:text="@string/pause_pomadoro"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/PomadoroResume"
+                style="@style/PomadoroButton"
+                android:text="@string/resume_pomadoro"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/PomadoroChange"
+                style="@style/PomadoroImageButton"
+                android:contentDescription="@string/change_pomadoro"
+                android:src="@android:drawable/ic_popup_sync"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/PomadoroStop"
+                style="@style/PomadoroImageButton"
+                android:contentDescription="@string/stop_pomadoro"
+                android:src="?android:attr/listChoiceIndicatorMultiple"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout style="@style/PomadoroCard">
-
-        <TextView
-            android:id="@+id/RestTime"
-            style="@style/TimeName"
-            android:text="@string/rest" />
-
-        <com.heshkin.routine_tracker.pomadoro.TimeButton
-            android:id="@+id/editRestTime"
-            style="@style/TimeButton"
-            custom:default_minute="5"
-            custom:name="restTime"
-            custom:colorActive="@color/purple_200"/>
-
-    </LinearLayout>
-
-    <LinearLayout style="@style/PomadoroCard">
-
-        <Button
-
-            android:id="@+id/PomadoroStart"
-            style="@style/PomadoroStartPauseResume"
-            android:visibility="visible"
-            android:text="@string/start_pomadoro" />
-
-        <Button
-            android:id="@+id/PomadoroPause"
-            style="@style/PomadoroStartPauseResume"
-            android:visibility="gone"
-            android:text="@string/pause_pomadoro" />
-
-        <Button
-            android:id="@+id/PomadoroResume"
-            style="@style/PomadoroStartPauseResume"
-            android:visibility="gone"
-            android:text="@string/resume_pomadoro" />
-
-        <ImageButton
-            android:id="@+id/PomadoroChange"
-            style="@style/PomadoroChangeStop"
-            android:visibility="visible"
-            android:contentDescription="@string/change_pomadoro"
-            android:src="@android:drawable/ic_popup_sync" />
-
-        <ImageButton
-            android:id="@+id/PomadoroStop"
-            style="@style/PomadoroChangeStop"
-            android:contentDescription="@string/stop_pomadoro"
-            android:src="?android:attr/listChoiceIndicatorMultiple"
-            android:visibility="gone" />
-
-    </LinearLayout>
 </LinearLayout>

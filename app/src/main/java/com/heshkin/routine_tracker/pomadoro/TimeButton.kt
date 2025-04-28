@@ -3,6 +3,7 @@ package com.heshkin.routine_tracker.pomadoro
 import android.annotation.SuppressLint
 import android.app.Activity.MODE_PRIVATE
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.icu.util.Calendar
 import android.util.AttributeSet
 import android.widget.Button
@@ -59,8 +60,8 @@ class TimeButton @JvmOverloads constructor(
     var mSeconds: Int
     var mMilliseconds: Int
 
-    private var mColorActive: Int = 0
-    private var mColorInactive: Int = 0
+    var mColorActive: Int = 0
+    var mColorInactive: Int = 0
 
     var mIsActive: Boolean = false
 
@@ -92,12 +93,18 @@ class TimeButton @JvmOverloads constructor(
 
     fun activate() {
         mIsActive = true
-        this.setBackgroundColor(mColorActive)
+        this.changeBackground(mColorActive)
     }
 
     fun deactivate() {
         mIsActive = false
-        this.setBackgroundColor(mColorInactive)
+        this.changeBackground(mColorInactive)
+    }
+
+    private fun changeBackground(color: Int) {
+        val drawable: GradientDrawable = this.background as GradientDrawable
+        drawable.setColor(color)
+        drawable.invalidateSelf()
     }
 
     fun setTime(hours: Int, minutes: Int, seconds: Int, milliseconds: Int) {

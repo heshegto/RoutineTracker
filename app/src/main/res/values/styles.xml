@@ -5,36 +5,39 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:padding">@dimen/pomadoro_card_padding</item>
+        <item name="android:background">@drawable/rounded_corners</item>
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="Base">
+        <item name="android:background">@drawable/rounded_corners</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/pomadoro_button_height</item>
+        <item name="android:textSize">@dimen/pomadoro_text_button_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginRight">@dimen/pomadoro_button_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/pomadoro_button_horizontal_margin</item>
+        <item name="android:padding">@dimen/pomadoro_button_padding</item>
     </style>
 
     <style name="TimeName">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:gravity">center</item>
+        <item name="android:backgroundTint">@color/white</item>
     </style>
 
-    <style name="TimeButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="PomadoroButton" parent="@style/Base">
+        <item name="android:color">@color/grey</item>
+    </style>
+
+
+    <style name="TimeButton" parent="@style/PomadoroButton">
         <item name="android:text">@string/time_template</item>
-        <item name="android:padding">10dp</item>
         <item name="colorInactive">@color/grey</item>
-        <item name="android:gravity">center</item>
     </style>
 
-    <style name="PomadoroStartPauseResume">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="PomadoroChangeStop">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:tint">#000000</item>
+    <style name="PomadoroImageButton" parent="@style/PomadoroButton">
+        <item name="android:layout_width">@dimen/pomadoro_button_height</item>
+        <item name="android:layout_height">@dimen/pomadoro_button_height</item>
+        <item name="android:tint">@color/black</item>
     </style>
 </resources>

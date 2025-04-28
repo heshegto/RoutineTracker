@@ -14,6 +14,7 @@ import android.os.CountDownTimer
 import android.provider.Settings
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Toast
 
 import androidx.activity.ComponentActivity
@@ -46,6 +47,8 @@ class PomadoroActivity : ComponentActivity() {
         timeButtonsArray = arrayOf(workTimeButton, restTimeButton)
         activeTimeButtonId = 0
         timeButtonsArray!![activeTimeButtonId!!].activate()
+        val background = findViewById<LinearLayout>(R.id.Pomadoro)
+        background.setBackgroundColor(timeButtonsArray!![activeTimeButtonId!!].mColorActive)
 
         val buttonPomadoroStart: Button = findViewById(R.id.PomadoroStart)
         val buttonPomadoroPause: Button = findViewById(R.id.PomadoroPause)
@@ -108,6 +111,7 @@ class PomadoroActivity : ComponentActivity() {
     }
 
     private fun changeActiveTimeButton() {
+        val background = findViewById<LinearLayout>(R.id.Pomadoro)
         var flag = 0
         timeButtonsArray ?: throw NoActiveTimeButtonException("No active time button")
         val size = timeButtonsArray!!.size
@@ -124,6 +128,7 @@ class PomadoroActivity : ComponentActivity() {
             flag + 1
         }
         timeButtonsArray!![activeTimeButtonId!!].activate()
+        background.setBackgroundColor(timeButtonsArray!![activeTimeButtonId!!].mColorActive)
     }
 
     private fun startCountDown() {
