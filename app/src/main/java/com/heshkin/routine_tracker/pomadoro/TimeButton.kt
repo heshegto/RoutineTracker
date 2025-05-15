@@ -34,8 +34,11 @@ import com.heshkin.routine_tracker.my_time_picker.MyTimePickerDialog
  * @property [mHours] contains hours for current time.
  * @property [mMinutes] contains minutes for current time.
  * @property [mSeconds] contains seconds for current time.
+ * @property [mMilliseconds] contains milliseconds for current time. Isn't shown for user. Just used for calculations.
  *
  * @property [mIsActive] contains state of [TimeButton].
+ * @property [mColorActive] contains color of [TimeButton] when it is active.
+ * @property [mColorInactive] contains color of [TimeButton] when it is inactive.
  *
  * @constructor Same as in [Button].
  */
@@ -60,10 +63,9 @@ class TimeButton @JvmOverloads constructor(
     var mSeconds: Int
     var mMilliseconds: Int
 
-    var mColorActive: Int = 0
-    var mColorInactive: Int = 0
-
     var mIsActive: Boolean = false
+    var mColorActive: Int = 0
+    private var mColorInactive: Int = 0
 
     init {
         val typedArray = context.theme.obtainStyledAttributes(
@@ -102,9 +104,8 @@ class TimeButton @JvmOverloads constructor(
     }
 
     private fun changeBackground(color: Int) {
-        val drawable: GradientDrawable = this.background as GradientDrawable
-        drawable.setColor(color)
-        drawable.invalidateSelf()
+        val background: GradientDrawable = this.background as GradientDrawable
+        background.setColor(color)
     }
 
     fun setTime(hours: Int, minutes: Int, seconds: Int, milliseconds: Int) {

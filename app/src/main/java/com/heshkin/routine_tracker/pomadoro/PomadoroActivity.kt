@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.Settings
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -41,8 +42,8 @@ class PomadoroActivity : ComponentActivity() {
 
         createNotificationChannel()
 
-        val workTimeButton: TimeButton = findViewById(R.id.editWorkTime)
-        val restTimeButton: TimeButton = findViewById(R.id.editRestTime)
+        val workTimeButton: TimeButton = findViewById(R.id.workTime)
+        val restTimeButton: TimeButton = findViewById(R.id.restTime)
 
         timeButtonsArray = arrayOf(workTimeButton, restTimeButton)
         activeTimeButtonId = 0
@@ -50,63 +51,57 @@ class PomadoroActivity : ComponentActivity() {
         val background = findViewById<LinearLayout>(R.id.Pomadoro)
         background.setBackgroundColor(timeButtonsArray!![activeTimeButtonId!!].mColorActive)
 
-        val buttonPomadoroStart: Button = findViewById(R.id.PomadoroStart)
-        val buttonPomadoroPause: Button = findViewById(R.id.PomadoroPause)
-        val buttonPomadoroResume: Button = findViewById(R.id.PomadoroResume)
-        val buttonPomadoroChange: ImageButton = findViewById(R.id.PomadoroChange)
-        val buttonPomadoroStop: ImageButton = findViewById(R.id.PomadoroStop)
+        val buttonStart: Button = findViewById(R.id.PomadoroStart)
+        val buttonPause: Button = findViewById(R.id.PomadoroPause)
+        val buttonResume: Button = findViewById(R.id.PomadoroResume)
+        val buttonChange: ImageButton = findViewById(R.id.PomadoroChange)
+        val buttonStop: ImageButton = findViewById(R.id.PomadoroStop)
+        val buttonArray = arrayOf(buttonStart, buttonPause, buttonResume, buttonChange, buttonStop)
 
-        buttonPomadoroStart.setOnClickListener {
+        buttonStart.setOnClickListener {
             if (haveNotificationPermission()) {
                 timeButtonsArray
                     ?: throw NoTimeButtons("No time buttons while button Start clicked")
                 activeTimeButtonId ?: throw NoActiveTimeButtonException("No active time button")
                 timeButtonsArray!![activeTimeButtonId!!].isClickable = false
-                buttonPomadoroStart.visibility = Button.GONE
-                buttonPomadoroPause.visibility = Button.VISIBLE
-                buttonPomadoroResume.visibility = Button.GONE
-                buttonPomadoroChange.visibility = ImageButton.GONE
-                buttonPomadoroStop.visibility = ImageButton.VISIBLE
+                makeButtonsVisible(buttonArray, arrayOf(1, 4))
                 startCountDown()
             }
-
         }
 
-        buttonPomadoroPause.setOnClickListener {
+        buttonPause.setOnClickListener {
             timer?.cancel() ?: throw NoTimerSetException("No timer set")
-            buttonPomadoroStart.visibility = Button.GONE
-            buttonPomadoroPause.visibility = Button.GONE
-            buttonPomadoroResume.visibility = Button.VISIBLE
-            buttonPomadoroChange.visibility = ImageButton.GONE
-            buttonPomadoroStop.visibility = ImageButton.VISIBLE
+            makeButtonsVisible(buttonArray, arrayOf(2, 4))
         }
 
-        buttonPomadoroResume.setOnClickListener {
+        buttonResume.setOnClickListener {
             timeButtonsArray ?: throw NoTimeButtons("No time buttons while Resume button clicked")
-            buttonPomadoroStart.visibility = Button.GONE
-            buttonPomadoroPause.visibility = Button.VISIBLE
-            buttonPomadoroResume.visibility = Button.GONE
-            buttonPomadoroChange.visibility = ImageButton.GONE
-            buttonPomadoroStop.visibility = ImageButton.VISIBLE
+            makeButtonsVisible(buttonArray, arrayOf(1, 4))
             startCountDown()
         }
 
-        buttonPomadoroChange.setOnClickListener {
+        buttonChange.setOnClickListener {
             changeActiveTimeButton()
         }
 
-        buttonPomadoroStop.setOnClickListener {
+        buttonStop.setOnClickListener {
             timeButtonsArray ?: throw NoActiveTimeButtonException("No active time button")
             activeTimeButtonId ?: throw NoActiveTimeButtonException("No active time button")
             timeButtonsArray!![activeTimeButtonId!!].restoreTime()
             timeButtonsArray!![activeTimeButtonId!!].isClickable = true
             timer!!.cancel()
             changeActiveTimeButton()
-            buttonPomadoroStart.visibility = Button.VISIBLE
-            buttonPomadoroPause.visibility = Button.GONE
-            buttonPomadoroResume.visibility = Button.GONE
-            buttonPomadoroChange.visibility = ImageButton.VISIBLE
-            buttonPomadoroStop.visibility = ImageButton.GONE
+            makeButtonsVisible(buttonArray, arrayOf(0, 3))
+        }
+    }
+
+    private fun makeButtonsVisible(buttons: Array<View>, indexes: Array<Int>) {
+        for (i in 0..buttons.size) {
+            if (i in indexes) {
+                buttons[i].visibility = Button.VISIBLE
+            } else {
+                buttons[i].visibility = Button.GONE
+            }
         }
     }
 
@@ -164,15 +159,17 @@ class PomadoroActivity : ComponentActivity() {
     }
 
     private fun haveNotificationPermission(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return true
+        }
         if (
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            and
-            (ActivityCompat.checkSelfPermission(
+            ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED)
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
+            if (
+                ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
                 )
@@ -182,7 +179,6 @@ class PomadoroActivity : ComponentActivity() {
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
                 }
-                //intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
             } else {
                 ActivityCompat.requestPermissions(
