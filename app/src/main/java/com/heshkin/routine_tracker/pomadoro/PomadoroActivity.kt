@@ -96,7 +96,7 @@ class PomadoroActivity : ComponentActivity() {
     }
 
     private fun makeButtonsVisible(buttons: Array<View>, indexes: Array<Int>) {
-        for (i in 0..buttons.size) {
+        for (i in 0..buttons.size-1) {
             if (i in indexes) {
                 buttons[i].visibility = Button.VISIBLE
             } else {
