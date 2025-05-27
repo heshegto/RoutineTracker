@@ -3,10 +3,15 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <path
-      android:pathData="M79.46,50.58C79.46,50.58 64.19,35.32 64.19,35.32C64.19,35.32 55.94,43.57 55.94,43.57C55.94,43.57 71.21,58.83 71.21,58.83C71.21,58.83 79.46,50.58 79.46,50.58ZM54.71,75.33C54.71,75.33 28.54,49.17 28.54,49.17C28.54,49.17 45.04,32.67 45.04,32.67C45.04,32.67 71.21,58.83 71.21,58.83C71.21,58.83 54.71,75.33 54.71,75.33Z"
-      android:strokeLineJoin="bevel"
-      android:strokeWidth="3"
-      android:fillColor="#ff0000"
-      android:strokeColor="#000000"/>
+  <group android:scaleX="0.91"
+      android:scaleY="0.91"
+      android:translateX="4.86"
+      android:translateY="4.86">
+    <path
+        android:pathData="M79.46,50.58C79.46,50.58 64.19,35.32 64.19,35.32C64.19,35.32 55.94,43.57 55.94,43.57C55.94,43.57 71.21,58.83 71.21,58.83C71.21,58.83 79.46,50.58 79.46,50.58ZM54.71,75.33C54.71,75.33 28.54,49.17 28.54,49.17C28.54,49.17 45.04,32.67 45.04,32.67C45.04,32.67 71.21,58.83 71.21,58.83C71.21,58.83 54.71,75.33 54.71,75.33Z"
+        android:strokeLineJoin="bevel"
+        android:strokeWidth="3"
+        android:fillColor="#ff0000"
+        android:strokeColor="#000000"/>
+  </group>
 </vector>
