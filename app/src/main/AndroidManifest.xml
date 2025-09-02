@@ -13,7 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RoutineTracker"
+        android:permission="android.permission.POST_NOTIFICATIONS"
         tools:targetApi="31">
+        <service
+            android:name=".pomadoro.PomadoroService"
+            android:label="@string/pomadoro_service_label"
+            android:description="@string/pomadoro_service_description"
+            android:permission="android.permission.POST_NOTIFICATIONS"
+            android:enabled="false"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

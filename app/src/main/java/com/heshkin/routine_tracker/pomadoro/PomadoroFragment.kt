@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,15 +42,11 @@ class PomadoroFragment : Fragment(R.layout.fragment_pomadoro) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("PomadoroFragment", "Зашли в блок onCreateView")
-
         return inflater.inflate(R.layout.fragment_pomadoro, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("PomadoroFragment", "Зашли в блок onCreate")
         super.onCreate(savedInstanceState)
-
         createNotificationChannel()
     }
 

@@ -18,4 +18,6 @@
     <string name="ask_for_notification">Разрешите показ уведомлений в Настройках</string>
     <string name="pomadoro_notification_name">Помадоро</string>
     <string name="pomadoro_notification_description">Настройки уведомлений Помадоро</string>
+    <string name="pomadoro_service_description">Помадоро запущен</string>
+    <string name="pomadoro_service_label">Помадоро</string>
 </resources>
