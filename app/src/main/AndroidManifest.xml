@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:allowBackup="true"
@@ -17,10 +19,11 @@
         tools:targetApi="31">
         <service
             android:name=".pomadoro.PomadoroService"
-            android:label="@string/pomadoro_service_label"
+            android:label="@string/pomadoro_label"
             android:description="@string/pomadoro_service_description"
             android:permission="android.permission.POST_NOTIFICATIONS"
-            android:enabled="false"
+            android:foregroundServiceType="specialUse"
+            android:enabled="true"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"

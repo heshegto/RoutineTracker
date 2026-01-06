@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/BMPomadoro"
+        android:icon="@drawable/ic_pomadoro"
+        android:orderInCategory="2"
+        android:title="@string/pomadoro_label" />
+    <item
+        android:id="@+id/BMRoutine"
+        android:icon="@drawable/ic_routine"
+        android:orderInCategory="1"
+        android:title="@string/routine_label" />
+    <item
+        android:id="@+id/smthElse"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/action_settings"
+        android:orderInCategory="3" />
+</menu>

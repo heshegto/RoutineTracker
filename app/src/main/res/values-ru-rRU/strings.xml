@@ -16,8 +16,10 @@
     <string name="pomadoro_notification_text">Время истекло!</string>
     <string name="text_while_time_zero">Время должно быть больше нуля</string>
     <string name="ask_for_notification">Разрешите показ уведомлений в Настройках</string>
-    <string name="pomadoro_notification_name">Помадоро</string>
-    <string name="pomadoro_notification_description">Настройки уведомлений Помадоро</string>
+    <string name="pomadoro_label">Помадоро</string>
+    <string name="pomadoro_notification_description_silent">Настройки уведомлений Помадоро для тихих сообщений</string>
     <string name="pomadoro_service_description">Помадоро запущен</string>
-    <string name="pomadoro_service_label">Помадоро</string>
+    <string name="routine_label">Рутина</string>
+    <string name="pomadoro_time_left">"Времени осталось: "</string>
+    <string name="pomadoro_notification_description_loud">Настройки уведомлений Помадоро для громкий сообщений</string>
 </resources>

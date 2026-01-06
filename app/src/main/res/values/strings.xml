@@ -17,9 +17,11 @@
     <string name="pomadoro_notification_text">Time is up!</string>
     <string name="text_while_time_zero">Time must be more than zero</string>
     <string name="ask_for_notification">Allow notifications in Settings</string>
-    <string name="pomadoro_notification_name">Pomadoro</string>
-    <string name="pomadoro_notification_description">Pomadoro notification settings</string>
+    <string name="pomadoro_label">Pomadoro</string>
+    <string name="pomadoro_notification_description_silent">Pomadoro notification settings for silent messages</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="pomadoro_service_description">Pomadoro running</string>
-    <string name="pomadoro_service_label">Pomadoro</string>
+    <string name="routine_label">Rotine</string>
+    <string name="pomadoro_time_left">"Time left: "</string>
+    <string name="pomadoro_notification_description_loud">Pomadoro notification settings for loud messages</string>
 </resources>

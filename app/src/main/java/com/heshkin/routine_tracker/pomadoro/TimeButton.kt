@@ -3,8 +3,8 @@ package com.heshkin.routine_tracker.pomadoro
 import android.annotation.SuppressLint
 import android.app.Activity.MODE_PRIVATE
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.GradientDrawable
-import android.icu.util.Calendar
 import android.util.AttributeSet
 import android.widget.Button
 
@@ -15,10 +15,10 @@ import com.heshkin.routine_tracker.my_time_picker.MyTimePickerDialog
 
 /** Extends [Button] class.
  *
- * Developed specifically to contain two times: current and initial.
- * Current time stored inside class, shown as [Button]'s Text and can be changed throw [setTime].
+ * Developed specifically to work with Shared preferences and button mechanics.
+ * Current time stored and shown as [Button]'s Text and can be changed throw [setTimeOnView].
  * Initial time stored in SharedPreferences and can be changed by CLICK on [Button] by [showTimePicker].
- * Initial time can be restored to current time by [restoreTime].
+ * Initial time can be restored to current time by [restoreInitTime].
  *
  * Have same XML attributes as [Button] class, plus its own:
  * * [R.styleable.TimeButton_name] - is a string that is used to get access
@@ -31,41 +31,33 @@ import com.heshkin.routine_tracker.my_time_picker.MyTimePickerDialog
  * @property [timeName] contains [TimeButton]'s name that used to get access to SharedPreferences.
  * Should be unique to be SharedPreferences unique.
  *
- * @property [mHours] contains hours for current time.
- * @property [mMinutes] contains minutes for current time.
- * @property [mSeconds] contains seconds for current time.
- * @property [mMilliseconds] contains milliseconds for current time. Isn't shown for user. Just used for calculations.
+ * @property [colorActive] contains color of [TimeButton] when it is active.
+ * @property [colorInactive] contains color of [TimeButton] when it is inactive.
  *
- * @property [mIsActive] contains state of [TimeButton].
- * @property [mColorActive] contains color of [TimeButton] when it is active.
- * @property [mColorInactive] contains color of [TimeButton] when it is inactive.
+ * @property [sp] contains [TimeButton]'s SharedPreferences.
  *
  * @constructor Same as in [Button].
  */
 
+@SuppressLint("AppCompatCustomView")
 class TimeButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : Button(context, attrs, defStyleAttr, defStyleRes) {
-    /** Fields of SharedPreferences */
+
     companion object {
-        private const val FIELD_HOURS = Calendar.HOUR.toString()
-        private const val FIELD_MINUTES = Calendar.MINUTE.toString()
-        private const val FIELD_SECONDS = Calendar.SECOND.toString()
+        /** Field of SharedPreferences that contains saved init time in seconds*/
+        private const val FIELD_TIME = "time"
     }
 
     private val timeName: String
 
-    var mHours: Int
-    var mMinutes: Int
-    var mSeconds: Int
-    var mMilliseconds: Int
+    val colorActive: Int
+    val colorInactive: Int
 
-    var mIsActive: Boolean = false
-    var mColorActive: Int = 0
-    private var mColorInactive: Int = 0
+    private val sp: SharedPreferences
 
     init {
         val typedArray = context.theme.obtainStyledAttributes(
@@ -77,107 +69,123 @@ class TimeButton @JvmOverloads constructor(
         /* this String is used to get access to Button's SharedPreferences */
         timeName = typedArray.getString(R.styleable.TimeButton_name) ?: "default"
 
-        mHours = typedArray.getInt(R.styleable.TimeButton_default_hours, 0)
-        mMinutes = typedArray.getInt(R.styleable.TimeButton_default_minute, 0)
-        mSeconds = typedArray.getInt(R.styleable.TimeButton_default_seconds, 0)
-        mMilliseconds = 0
-
-        mColorActive = typedArray.getColor(R.styleable.TimeButton_colorActive, 0)
-        mColorInactive = typedArray.getColor(R.styleable.TimeButton_colorInactive, 0)
+        val hours: Int = typedArray.getInt(R.styleable.TimeButton_default_hours, 0)
+        val minutes: Int = typedArray.getInt(R.styleable.TimeButton_default_minute, 0)
+        val seconds: Int = typedArray.getInt(R.styleable.TimeButton_default_seconds, 0)
+        colorActive = typedArray.getColor(R.styleable.TimeButton_colorActive, 0)
+        colorInactive = typedArray.getColor(R.styleable.TimeButton_colorInactive, 0)
 
         typedArray.recycle()
 
-        setInitialTime(mHours, mMinutes, mSeconds)
-
         setOnClickListener { showTimePicker() }
+        sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
+        setInitialTime( TimeValue.putTimeTogether(hours, minutes, seconds) )
+        restoreInitTime()
         deactivate()
     }
 
-    fun activate() {
-        mIsActive = true
-        this.changeBackground(mColorActive)
+    /** Changes [TimeButton]'s background color to active
+     * @return Color active */
+    fun activate(): Int {
+        this.changeBackground(colorActive)
+        return colorActive
     }
 
-    fun deactivate() {
-        mIsActive = false
-        this.changeBackground(mColorInactive)
+    /** Changes [TimeButton]'s background color to inactive
+     * @return Color inactive */
+    fun deactivate(): Int {
+        this.changeBackground(colorInactive)
+        return colorInactive
     }
 
+    /** Changes [TimeButton]'s background color
+     * @param color Color that needs to be set */
     private fun changeBackground(color: Int) {
-        val background: GradientDrawable = this.background as GradientDrawable
-        background.setColor(color)
+        (this.background.mutate() as GradientDrawable).setColor(color)
     }
 
-    fun setTime(hours: Int, minutes: Int, seconds: Int, milliseconds: Int) {
+    /** Sets time to [TimeButton]'s text
+     * @param hours hours that needs to be shown
+     * @param minutes minutes that needs to be shown
+     * @param seconds seconds that needs to be shown */
+    fun setTimeOnView(hours: Int, minutes: Int, seconds: Int) {
         @SuppressLint("SetTextI18n")
         text = "%02d:%02d:%02d".format(hours, minutes, seconds)
-        mHours = hours
-        mMinutes = minutes
-        mSeconds = seconds
-        mMilliseconds = milliseconds
     }
 
+    /** Sets time to [TimeButton]'s text
+     * @param timeInSeconds time in seconds that needs to be shown */
+    fun setTimeOnView(timeInSeconds: Int) {
+        val time: TimeValue= TimeValue.breakTime(timeInSeconds)
+        setTimeOnView(time.hours, time.minutes, time.seconds)
+    }
+
+    /** Saves time in seconds to SharedPreferences
+     * @param time time in seconds that needs to be saved*/
+    private fun setTimeSP(time: Int) {
+        sp.edit { putInt(FIELD_TIME, time)}
+    }
+
+    /** Shows time picker dialog. Saves its output to [TimeButton]'s SharedPreferences
+     * and puts it as a text of [TimeButton] */
     private fun showTimePicker() {
+        val time : TimeValue = TimeValue.breakTime(sp.getInt(FIELD_TIME, 0))
         MyTimePickerDialog(
             context,
             { _, hours, minutes, seconds ->
-                setSharedPreferences(hours, minutes, seconds)
-                setTime(hours, minutes, seconds, 0)
+                setTimeSP(TimeValue.putTimeTogether(hours, minutes, seconds))
+                setTimeOnView(hours, minutes, seconds)
             },
-            mHours,
-            mMinutes,
-            mSeconds,
+            time.hours,
+            time.minutes,
+            time.seconds,
             true
         ).show()
     }
 
-    fun restoreTime() {
-        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        setTime(
-            sp.getInt(FIELD_HOURS, 0),
-            sp.getInt(FIELD_MINUTES, 0),
-            sp.getInt(FIELD_SECONDS, 0),
-            0
-        )
-    }
+    /**
+     * Gets initial time in seconds from SharedPreferences and sets it to [TimeButton]'s text
+     */
+    fun restoreInitTime() { setTimeOnView( getInitTime() ) }
 
-    private fun setSharedPreferences(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
-        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
-        sp.edit {
-            putInt(FIELD_HOURS, hours)
-            putInt(FIELD_MINUTES, minutes)
-            putInt(FIELD_SECONDS, seconds)
-        }
-    }
-
-    private fun setInitialTime(
-        defaultHours: Int = 0,
-        defaultMinutes: Int = 0,
-        defaultSeconds: Int = 0,
-    ) {
-        val sp = context.getSharedPreferences(timeName, MODE_PRIVATE)
+    /**
+     * Sets initial time in seconds to SharedPreferences
+     *
+     * This function exists only to make code more readable
+     *
+     * @param defaultSeconds initial time in seconds
+     */
+    private fun setInitialTime(defaultSeconds: Int = 0) {
         /* if something wrong with SharedPreferences, set default values to SharedPreferences
          * if everything is ok, values from SharedPreferences goes to TimeButton */
-        if (
-            sp.all.isEmpty()
-            or !sp.contains(FIELD_HOURS)
-            or !sp.contains(FIELD_MINUTES)
-            or !sp.contains(FIELD_SECONDS)
-        ) {
-            sp.edit {
-                putInt(FIELD_HOURS, defaultHours)
-                putInt(FIELD_MINUTES, defaultMinutes)
-                putInt(FIELD_SECONDS, defaultSeconds)
-            }
-        } else {
-            setTime(
-                sp.getInt(FIELD_HOURS, 0),
-                sp.getInt(FIELD_MINUTES, 0),
-                sp.getInt(FIELD_SECONDS, 0),
-                0
-            )
+        if (sp.all.isEmpty() or !sp.contains(FIELD_TIME)) {
+            setTimeSP( defaultSeconds )
         }
     }
 
+    /**
+     * @return Initial time in seconds from SharedPreferences */
+    fun getInitTime() : Int = sp.getInt(FIELD_TIME, 0)
 
+    /** Contains time in hours, minutes and seconds */
+    data class TimeValue(val hours: Int, val minutes: Int, val seconds: Int) {
+        companion object {
+            /** Creates [TimeValue] from time in seconds */
+            fun breakTime(timeInSeconds: Int): TimeValue {
+                val seconds: Int = timeInSeconds % 60
+                val minutes: Int = timeInSeconds % 3600 / 60
+                val hours: Int = timeInSeconds / 3600
+                return TimeValue(hours, minutes, seconds)
+            }
+
+            /** Creates [TimeValue] from time in seconds */
+            fun breakTime(timeInSeconds: Long): TimeValue {
+                return breakTime(timeInSeconds.toInt())
+            }
+
+            /** Sums up time into seconds*/
+            fun putTimeTogether(hours: Int, minutes: Int, seconds: Int) : Int =
+                hours * 3600 + minutes * 60 + seconds
+        }
+    }
 }
